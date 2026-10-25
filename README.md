@@ -7,7 +7,7 @@ I built this site carefully by adding and removing features until I had a raddic
 <img width="1018" height="668" alt="Screenshot 2026-10-25 12 32 10 PM" src="https://github.com/user-attachments/assets/f1dc14f8-d218-4b1d-9af7-7697151ba3b1" />
 
 
-### Opening instructions
+## Opening instructions
 - Run the code through the demo simply by going there.
 - If that doesn't work try again.
 - Then Copy-Paste this code into a HTML code runner.
