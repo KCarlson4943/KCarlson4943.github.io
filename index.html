@@ -3,31 +3,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My To-Do List</title>
+  
+  <title>My To Do List</title>
 
-  <!-- App styling -->
   <style>
     * {
       box-sizing: border-box;
     }
 
-    /* Center the to-do app on the page */
     body {
       margin: 0;
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: #f4f7f6;
+      background: #1d0457;
       font-family: Arial, sans-serif;
       color: #222;
     }
 
-    /* Card container for the to-do app */
     .todo-container {
       width: 100%;
       max-width: 500px;
-      background: white;
+      background: rgb(4, 52, 91);
       border-radius: 0;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
       padding: 24px;
@@ -38,21 +36,34 @@
       text-align: center;
     }
 
-    /* Input row with task field and add button */
     .input-row {
-      display: flex;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr) auto;
       gap: 10px;
       margin-bottom: 20px;
     }
 
     input {
-      flex: 1;
+      min-width: 0;
       padding: 12px;
-      border: 2px solid #ddd;
+      border: 2px solid #e80606;
       border-radius: 0;
       font-size: 16px;
     }
 
+    input.has-value {
+      border-color: #2ecc71;
+    }
+
+    @media (max-width: 420px) {
+      .input-row {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .add-btn {
+        grid-column: 1 / -1;
+      }
+    }
     button {
       cursor: pointer;
       border: none;
@@ -63,14 +74,13 @@
     .add-btn {
       background: #2ecc71;
       color: white;
-      padding: 12px 18px;
+      padding: 5px 18px;
     }
 
     .add-btn:hover {
-      background: #27ae60;
+      background: #088006;
     }
 
-    /* List styling for the task items */
     ul {
       list-style: none;
       padding: 0;
@@ -84,8 +94,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: #f9f9f9;
-      border: 1px solid #ddd;
+      background: #1323d7ea;
+      border: 5ch solid #ddd;
       border-radius: 0;
       padding: 12px 14px;
     }
@@ -96,9 +106,16 @@
       font-size: 16px;
     }
 
+    .task-date {
+      margin: 0 12px;
+      color: #555;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
     .remove-btn {
-      background: #e74c3c;
-      color: white;
+      background: #040ede;
+      color: rgb(28, 64, 196);
       padding: 8px 12px;
       margin-left: 12px;
     }
@@ -106,15 +123,95 @@
     .remove-btn:hover {
       background: #c0392b;
     }
+
+    /* Show the completion stamps around the page only when the list is empty. */
+    .completion-image {
+      display: none;
+      position: fixed;
+      width: clamp(170px, 20vw, 260px);
+      height: auto;
+      z-index: 2;
+      pointer-events: none;
+      padding: 24px;
+      box-sizing: content-box;
+      border-radius: 36px;
+      object-fit: cover;
+    }
+
+    .completion-image--top-left {
+      top: 32px;
+      left: 32px;
+    }
+
+    .completion-image--top-right {
+      top: 32px;
+      right: 32px;
+    }
+
+    .completion-image--bottom-left {
+      bottom: 32px;
+      left: 32px;
+    }
+
+    .completion-image--bottom-right {
+      bottom: 32px;
+      right: 32px;
+    }
+
+    .completion-image.is-visible {
+      display: block;
+    }
+
+    /* Keep the Hello World link accessible in the top-right corner. */
+    .hello-link {
+      position: fixed;
+      top: 6px;
+      right: 58px;
+      z-index: 3;
+      padding: 12px 18px;
+      background: #2ecc71;
+      color: white;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .hello-link:hover {
+      background: #088006;
+    }
   </style>
 </head>
 <body>
-  <!-- Main container for the to-do list -->
+  <!-- Link to the separate Hello World page. -->
+  <a class="hello-link" href="hello.html">Find Tips for Organizing........</a>
+
+  <!-- These stamps share visibility behavior and use different corner positions. -->
+  <img
+    class="completion-image completion-image--top-left"
+    src="https://thumbs.dreamstime.com/b/vector-completed-stamp-isolated-white-31258902.jpg"
+    alt="Completed"
+  />
+  <img
+    class="completion-image completion-image--top-right"
+    src="https://thumbs.dreamstime.com/b/vector-completed-stamp-isolated-white-31258902.jpg"
+    alt="Completed"
+  />
+  <img
+    class="completion-image completion-image--bottom-left"
+    src="https://thumbs.dreamstime.com/b/vector-completed-stamp-isolated-white-31258902.jpg"
+    alt="Completed"
+  />
+  <img
+    class="completion-image completion-image--bottom-right"
+    src="https://thumbs.dreamstime.com/b/vector-completed-stamp-isolated-white-31258902.jpg"
+    alt="Completed"
+  />
+
   <div class="todo-container">
     <h2>My To-Do List</h2>
 
     <div class="input-row">
-      <input type="text" id="todo-input" placeholder="Type a task and press Enter" />
+      <input type="text" id="todo-input" placeholder="Have fun!" />
+      <input type="date" id="completion-date" aria-label="Completion date" />
       <button class="add-btn" id="add-btn" type="button">Add</button>
     </div>
 
@@ -122,53 +219,82 @@
   </div>
 
   <script>
-    // Get references to the main input, list, and add button elements.
     const todoInput = document.getElementById('todo-input');
+    const completionDateInput = document.getElementById('completion-date');
     const todoList = document.getElementById('todo-list');
-    const addBtn = document.getElementById('add-btn');
+    const addButton = document.getElementById('add-btn');
+    const completionImages = document.querySelectorAll('.completion-image');
 
-    // Add a new task to the list if the input contains text.
+    function updateInputOutline(input) {
+      input.classList.toggle('has-value', input.value.trim() !== '');
+    }
+
+    // Keep the decorative stamps in sync with whether any tasks remain.
+    function updateCompletionImage() {
+      const isEmpty = todoList.children.length === 0;
+      completionImages.forEach((image) => image.classList.toggle('is-visible', isEmpty));
+    }
+
+    todoInput.addEventListener('input', () => updateInputOutline(todoInput));
+    completionDateInput.addEventListener('input', () => updateInputOutline(completionDateInput));
+
+    // Create a task row, optionally including its completion date.
     function addTask() {
-      const value = todoInput.value.trim();
+      const taskName = todoInput.value.trim();
 
-      if (!value) {
+      if (!taskName) {
         todoInput.focus();
         return;
       }
 
-      const li = document.createElement('li');
+      const taskItem = document.createElement('li');
       const taskText = document.createElement('span');
       taskText.className = 'task-text';
-      taskText.textContent = value;
+      taskText.textContent = taskName;
 
-      const removeBtn = document.createElement('button');
-      removeBtn.className = 'remove-btn';
-      removeBtn.type = 'button';
-      removeBtn.textContent = 'Remove';
+      if (completionDateInput.value) {
+        const completionDate = document.createElement('time');
+        completionDate.className = 'task-date';
+        completionDate.dateTime = completionDateInput.value;
+        completionDate.textContent = new Date(
+          `${completionDateInput.value}T00:00:00`
+        ).toLocaleDateString();
+        taskItem.appendChild(taskText);
+        taskItem.appendChild(completionDate);
+      } else {
+        taskItem.appendChild(taskText);
+      }
 
-      // Remove the task when the user clicks the delete button.
-      removeBtn.addEventListener('click', () => {
-        li.remove();
+      const removeButton = document.createElement('button');
+      removeButton.className = 'remove-btn';
+      removeButton.type = 'button';
+      removeButton.textContent = 'Remove';
+
+      removeButton.addEventListener('click', () => {
+        taskItem.remove();
+        updateCompletionImage();
       });
 
-      li.appendChild(taskText);
-      li.appendChild(removeBtn);
-      todoList.appendChild(li);
+      taskItem.appendChild(removeButton);
+      todoList.appendChild(taskItem);
+      updateCompletionImage();
 
-      // Clear the input and keep the cursor ready for the next task.
       todoInput.value = '';
+      completionDateInput.value = '';
+      updateInputOutline(todoInput);
+      updateInputOutline(completionDateInput);
       todoInput.focus();
     }
 
-    // Add task when the user clicks the button.
-    addBtn.addEventListener('click', addTask);
+    addButton.addEventListener('click', addTask);
 
-    // Allow Enter key to add a task as well.
     todoInput.addEventListener('keydown', (event) => {
       if (event.key === 'Enter') {
         addTask();
       }
     });
+
+    updateCompletionImage();
   </script>
 </body>
 </html>
